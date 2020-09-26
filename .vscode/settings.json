@@ -1,3 +1,9 @@
 {
-  "editor.tabSize": 2
+  "editor.tabSize": 2,
+  "appService.zipIgnorePattern": [
+    "node_modules{,/**}",
+    ".vscode{,/**}"
+  ],
+  "appService.defaultWebAppToDeploy": "/subscriptions/36280d60-a78e-428b-b616-2943207f34f4/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/jm-powerhack",
+  "appService.deploySubpath": "."
 }
