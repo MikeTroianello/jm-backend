@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const GroupSchema = new Schema({
+const groupSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -10,11 +10,12 @@ const GroupSchema = new Schema({
   password: {
     type: String,
   },
+  whitelist: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   creatorId: { type: Schema.Types.ObjectId, ref: 'User' },
   time: { type: Date, default: Date.now },
 });
 
-const Group = mongoose.model('Group', GroupSchema);
+const Group = mongoose.model('Group', groupSchema);
 
 module.exports = Group;

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema();
 
-const CommentSchema = new Schema({
+const commentSchema = new Schema({
   title: {
     type: String,
     required: true,
@@ -14,6 +14,6 @@ const CommentSchema = new Schema({
   time: { type: Date, default: Date.now },
 });
 
-const Comment = mongoose.model('Comment', CommentSchema);
+const Comment = mongoose.model('Comment', commentSchema);
 
 module.exports = Comment;

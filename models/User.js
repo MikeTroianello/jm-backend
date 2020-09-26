@@ -25,6 +25,10 @@ const userSchema = new Schema({
   phone: {
     type: String,
   },
+  admin: {
+    type: Boolean,
+    default: false,
+  },
   time: { type: Date, default: Date.now },
 });
 

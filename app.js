@@ -87,8 +87,18 @@ app.use(
 
 const index = require('./routes/index');
 const register = require('./routes/register');
+const groups = require('./routes/groups');
+const blog = require('./routes/blog');
+const categories = require('./routes/categories');
+const challenges = require('./routes/challenges');
+const users = require('./routes/users');
 
 app.use('/', index);
 app.use('/register', register);
+app.use('/groups', groups);
+app.use('/blog', blog);
+app.use('/categories', categories);
+app.use('/challenges', challenges);
+app.use('/users', users);
 
 module.exports = app;

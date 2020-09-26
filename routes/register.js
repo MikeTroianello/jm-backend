@@ -5,6 +5,7 @@ var router = express.Router();
 const passport = require('passport');
 const bcrypt = require('bcrypt');
 const bcryptSalt = 10;
+const auth = require('../configs/authMiddleware.js');
 
 const User = require('../models/User');
 
@@ -75,17 +76,25 @@ router.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
-router.post('/logout', (req, res, next) => {
-  req.logout();
-  res.status(200).json({ message: 'Logged out' });
+router.post('/logout', async (req, res, next) => {
+  await req.logout();
+  console.log(chalk.blueBright('Logged out'));
+  res.json({ message: 'Logged out' });
 });
 
-router.get('/test', (req, res) => {
-  if (req.isAuthenticated()) {
-    res.json({ msg: 'You have persisted in being logged in' });
-  } else {
-    res.json({ msg: 'User has not persisted', loggedIn: true });
-  }
+router.get('/test', auth, (req, res) => {
+  console.log(chalk.cyanBright('LOGGED IN'));
+  res.json({ msg: 'You have persisted in being logged in' });
 });
+
+// router.get('/test', (req, res) => {
+//   if (req.isAuthenticated()) {
+//     console.log('LOGGED IN');
+//     res.json({ msg: 'You have persisted in being logged in' });
+//   } else {
+//     console.log(chalk.red('NOT LOGGED IN'));
+//     res.json({ msg: 'User has not persisted', loggedIn: true });
+//   }
+// });
 
 module.exports = router;

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema();
 
-const CommentCollectionSchema = new Schema({
+const commentCollectionSchema = new Schema({
   group: {
     type: Number,
   },
@@ -11,7 +11,7 @@ const CommentCollectionSchema = new Schema({
 
 const CommentCollection = mongoose.model(
   'CommentCollection',
-  CommentCollectionSchema
+  commentCollectionSchema
 );
 
 module.exports = CommentCollection;
