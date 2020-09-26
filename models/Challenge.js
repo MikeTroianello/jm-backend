@@ -1,17 +1,23 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const CategorySchema = new Schema({
+const ChallengeSchema = new Schema({
   name: {
     type: String,
     required: true,
-    unique: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  type: {
+    type: String,
   },
   users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   creatorId: { type: Schema.Types.ObjectId, ref: 'User' },
   time: { type: Date, default: Date.now },
 });
 
-const Category = mongoose.model('Category', CategorySchema);
+const Challenge = mongoose.model('Challenge', ChallengeSchema);
 
-module.exports = Category;
+module.exports = Challenge;
