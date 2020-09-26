@@ -9,11 +9,10 @@ const mongoose = require('mongoose');
 const logger = require('morgan');
 const path = require('path');
 
+const cors = require('cors');
+
 mongoose
-  .connect(
-    'mongodb://e55171d3-0ee0-4-231-b9ee:hMPZnPKeWsJC4uc09Ti6tUyB8BnmWhgQbXSIr9oNyzMBjUlG0ou2q5TIatOIvd6CUKNO3yVrK69R10ymT2WUKg%3D%3D@e55171d3-0ee0-4-231-b9ee.documents.azure.com:10255/?ssl=true',
-    { useNewUrlParser: true }
-  )
+  .connect(process.env.MONGO_DB, { useNewUrlParser: true })
   .then((x) => {
     console.log(
       `Connected to Mongo! Database name: "${x.connections[0].name}"`
@@ -53,6 +52,20 @@ app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 
 // default value for title local
 app.locals.title = 'Express - Generated with IronGenerator';
+
+// app.use(
+//   cors({
+//     credentials: true,
+//     origin: [process.env.ORIGIN],
+//   })
+// );
+
+app.use(
+  cors({
+    credentials: true,
+    origin: ['http://localhost:3000'],
+  })
+);
 
 const index = require('./routes/index');
 const register = require('./routes/register');
