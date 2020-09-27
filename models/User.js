@@ -25,7 +25,15 @@ const userSchema = new Schema({
   phone: {
     type: String,
   },
+  special: {
+    type: Boolean,
+    default: false,
+  },
   admin: {
+    type: Boolean,
+    default: false,
+  },
+  deleted: {
     type: Boolean,
     default: false,
   },

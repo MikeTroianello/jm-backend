@@ -5,7 +5,10 @@ const groupSchema = new Schema({
   name: {
     type: String,
     required: true,
-    unique: true,
+  },
+  public: {
+    type: Boolean,
+    default: false,
   },
   password: {
     type: String,

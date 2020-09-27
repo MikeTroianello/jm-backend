@@ -6,9 +6,8 @@ const categorySchema = new Schema({
     type: String,
     required: true,
   },
-  challenges: {
-    type: Array,
-    default: [],
+  logo: {
+    type: String,
   },
   time: { type: Date, default: Date.now },
 });

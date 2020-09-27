@@ -16,37 +16,55 @@ router.get('/', (req, res, next) => {
   res.json({ msg: 'ROUTE HIT' });
 });
 
-router.post('/signup', async (req, res) => {
-  try {
-    const { username, password } = req.body;
-
-    let lowerCaseUsername = username.toLowerCase();
-
-    const salt = await bcrypt.genSalt(bcryptSalt);
-    const hashPass = await bcrypt.hash(password, salt);
-    const newUser = await User.create({
-      username,
-      password: hashPass,
-      lowerCaseUsername,
-    });
-
-    User.find({ lowerCaseUsername });
-
-    console.log(chalk.green('SUCCESS'));
-    res.json({ msg: newUser });
-  } catch (err) {
-    console.log(chalk.red('YA DONE MESSED UP, A ARON'));
-    res.json({ err });
-  }
-});
-
-// router.post('/login', (req, res) => {
+// router.post('/signup', async (req, res) => {
 //   try {
+//     const { username, password } = req.body;
+
+//     let lowerCaseUsername = username.toLowerCase();
+
+//     const salt = await bcrypt.genSalt(bcryptSalt);
+//     const hashPass = await bcrypt.hash(password, salt);
+//     const newUser = await User.create({
+//       username,
+//       password: hashPass,
+//       lowerCaseUsername,
+//     });
+
+//     User.find({ lowerCaseUsername });
+
+//     console.log(chalk.green('SUCCESS'));
+//     res.json({ msg: newUser });
 //   } catch (err) {
-//     console.log(chalk.red(err));
+//     console.log(chalk.red('YA DONE MESSED UP, A ARON'));
 //     res.json({ err });
 //   }
 // });
+
+router.post('/signup', async (req, res) => {
+  const { username, password } = req.body;
+
+  let lowerCaseUsername = username.toLowerCase();
+
+  const salt = await bcrypt.genSalt(bcryptSalt);
+  const hashPass = await bcrypt.hash(password, salt);
+  const newUser = await User.create({
+    username,
+    password: hashPass,
+    lowerCaseUsername,
+  });
+
+  // User.find({ lowerCaseUsername });
+
+  console.log(chalk.green('SUCCESS'));
+  req.login(newUser, (err) => {
+    if (err) {
+      console.log('IT BROKE AT THE LOGIN');
+      res.status(500).json({ message: 'Login after signup went bad.' });
+      return;
+    }
+    res.status(200).json(aNewUser);
+  });
+});
 
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, theUser, failureDetails) => {
@@ -94,6 +112,51 @@ router.get('/test', auth, (req, res) => {
 //   } else {
 //     console.log(chalk.red('NOT LOGGED IN'));
 //     res.json({ msg: 'User has not persisted', loggedIn: true });
+//   }
+// });
+
+// router.post('/signup', async (req, res) => {
+//   try {
+//     const { username, password } = req.body;
+
+//     let lowerCaseUsername = username.toLowerCase();
+
+//     const salt = await bcrypt.genSalt(bcryptSalt);
+//     const hashPass = await bcrypt.hash(password, salt);
+//     const newUser = await User.create({
+//       username,
+//       password: hashPass,
+//       lowerCaseUsername,
+//     });
+
+//     // User.find({ lowerCaseUsername });
+
+//     console.log(chalk.green('SUCCESS'));
+//     await passport.authenticate('local', (err, theUser, failureDetails) => {
+//       if (err) {
+//         res
+//           .status(500)
+//           .json({ message: 'Something went wrong authenticating user' });
+//         return;
+//       }
+
+//       if (!theUser) {
+//         res.status(401).json(failureDetails);
+//         return;
+//       }
+
+//       req.login(theUser, (err) => {
+//         if (err) {
+//           res.status(500).json({ message: 'Session save went bad.' });
+//           return;
+//         } else {
+//           res.json({ msg: 'User has been logged in', user: newUser });
+//         }
+//       });
+//     })(req, res, next);
+//   } catch (err) {
+//     console.log(chalk.red('YA DONE MESSED UP, A ARON'));
+//     res.json({ err });
 //   }
 // });
 
