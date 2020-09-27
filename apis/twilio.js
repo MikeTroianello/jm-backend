@@ -9,7 +9,7 @@ const client = require('twilio')(accountSid, authToken);
 
 client.messages
   .create({
-    to: 'toPhone',
+    to: toPhone,
     from: fromPhone,
     body: 'YEET',
   })

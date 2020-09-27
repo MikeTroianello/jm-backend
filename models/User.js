@@ -33,10 +33,20 @@ const userSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  master: {
+    type: Boolean,
+    default: false,
+  },
   deleted: {
     type: Boolean,
     default: false,
   },
+  score: {
+    type: Number,
+    default: 0,
+  },
+  challenges: [{ type: Schema.Types.ObjectId, ref: 'Challenge' }],
+  categories: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
   time: { type: Date, default: Date.now },
 });
 

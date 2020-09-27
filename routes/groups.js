@@ -6,6 +6,15 @@ const auth = require('../configs/authMiddleware');
 const Group = require('../models/Group');
 const chalk = require('chalk');
 
+require('dotenv').config();
+
+const accountSid = process.env.SID;
+const authToken = process.env.AUTH_TOKEN;
+const fromPhone = process.env.FROM_PHONE;
+const toPhone = process.env.TO_PHONE;
+
+const client = require('twilio')(accountSid, authToken);
+
 router.post('/create', auth, async (req, res) => {
   try {
     const { name, password, public } = req.body;
@@ -62,6 +71,17 @@ router.post('/join/:id', auth, async (req, res) => {
     res.json({ err });
   }
 });
+
+// router.get('/message-group/:id', auth, async (req, res) => {
+//   console.log('CALLING TWILIO');
+//   client.messages
+//     .create({
+//       to: toPhone,
+//       from: fromPhone,
+//       body: 'YEET',
+//     })
+//     .then((message) => console.log(message.sid));
+// });
 
 router.delete('./delete', (req, res) => {});
 

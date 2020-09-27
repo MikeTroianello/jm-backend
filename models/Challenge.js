@@ -6,18 +6,23 @@ const challengeSchema = new Schema({
     type: String,
     required: true,
   },
-  description: {
+  category: {
     type: String,
     required: true,
   },
-  type: {
+  challenge: {
     type: String,
+    required: true,
+  },
+  bonusChallenge: {
+    type: String,
+    required: true,
+  },
+  minimumChallenge: {
+    type: String,
+    required: true,
   },
   attempts: {
-    type: Number,
-    default: 0,
-  },
-  score: {
     type: Number,
     default: 0,
   },

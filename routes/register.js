@@ -16,54 +16,69 @@ router.get('/', (req, res, next) => {
   res.json({ msg: 'ROUTE HIT' });
 });
 
-// router.post('/signup', async (req, res) => {
-//   try {
-//     const { username, password } = req.body;
-
-//     let lowerCaseUsername = username.toLowerCase();
-
-//     const salt = await bcrypt.genSalt(bcryptSalt);
-//     const hashPass = await bcrypt.hash(password, salt);
-//     const newUser = await User.create({
-//       username,
-//       password: hashPass,
-//       lowerCaseUsername,
-//     });
-
-//     User.find({ lowerCaseUsername });
-
-//     console.log(chalk.green('SUCCESS'));
-//     res.json({ msg: newUser });
-//   } catch (err) {
-//     console.log(chalk.red('YA DONE MESSED UP, A ARON'));
-//     res.json({ err });
-//   }
-// });
-
 router.post('/signup', async (req, res) => {
-  const { username, password } = req.body;
+  try {
+    const {
+      username,
+      password,
+      email,
+      phone,
+      special,
+      admin,
+      master,
+    } = req.body;
 
-  let lowerCaseUsername = username.toLowerCase();
-
-  const salt = await bcrypt.genSalt(bcryptSalt);
-  const hashPass = await bcrypt.hash(password, salt);
-  const newUser = await User.create({
-    username,
-    password: hashPass,
-    lowerCaseUsername,
-  });
-
-  // User.find({ lowerCaseUsername });
-
-  console.log(chalk.green('SUCCESS'));
-  req.login(newUser, (err) => {
-    if (err) {
-      console.log('IT BROKE AT THE LOGIN');
-      res.status(500).json({ message: 'Login after signup went bad.' });
+    if (!username || !password) {
+      console.log('IT IS BREAKING DUE TO NO USERNAME AND OR PASSWORD');
+      res.status(400).json({ message: 'Provide username and password' });
       return;
     }
-    res.status(200).json(aNewUser);
-  });
+
+    // if (password.length < 6) {
+    //   console.log('THE PASSWORD IS NOT 6 OR GREATER');
+    //   res.status(400).json({
+    //     message:
+    //       'Please make your password at least 6 characters long for security purposes.',
+    //   });
+    //   return;
+    // }
+
+    let lowerCaseUsername = username.toLowerCase();
+
+    let foundUser = await User.findOne({ lowerCaseUsername });
+
+    if (foundUser) {
+      console.log('USER ALREADY EXISTS', foundUser);
+      res.json({ err: 'User Already Exists!' });
+      return;
+    }
+
+    const salt = await bcrypt.genSalt(bcryptSalt);
+    const hashPass = await bcrypt.hash(password, salt);
+    const newUser = await User.create({
+      username,
+      password: hashPass,
+      lowerCaseUsername,
+      email,
+      phone,
+      special,
+      admin,
+      master,
+    });
+
+    console.log(chalk.green('SUCCESS'));
+    await req.login(newUser, (err) => {
+      if (err) {
+        console.log('IT BROKE AT THE LOGIN', err);
+        res.status(500).json({ message: 'Login after signup went bad.', err });
+        return;
+      }
+      res.status(200).json(newUser);
+    });
+  } catch (err) {
+    console.log('FAILED', err);
+    res.json({ err: err });
+  }
 });
 
 router.post('/login', (req, res, next) => {
@@ -76,13 +91,10 @@ router.post('/login', (req, res, next) => {
     }
 
     if (!theUser) {
-      // "failureDetails" contains the error messages
-      // from our logic in "LocalStrategy" { message: '...' }.
       res.status(401).json(failureDetails);
       return;
     }
 
-    // save user in session
     req.login(theUser, (err) => {
       if (err) {
         res.status(500).json({ message: 'Session save went bad.' });
@@ -104,60 +116,5 @@ router.get('/test', auth, (req, res) => {
   console.log(chalk.cyanBright('LOGGED IN'));
   res.json({ msg: 'You have persisted in being logged in' });
 });
-
-// router.get('/test', (req, res) => {
-//   if (req.isAuthenticated()) {
-//     console.log('LOGGED IN');
-//     res.json({ msg: 'You have persisted in being logged in' });
-//   } else {
-//     console.log(chalk.red('NOT LOGGED IN'));
-//     res.json({ msg: 'User has not persisted', loggedIn: true });
-//   }
-// });
-
-// router.post('/signup', async (req, res) => {
-//   try {
-//     const { username, password } = req.body;
-
-//     let lowerCaseUsername = username.toLowerCase();
-
-//     const salt = await bcrypt.genSalt(bcryptSalt);
-//     const hashPass = await bcrypt.hash(password, salt);
-//     const newUser = await User.create({
-//       username,
-//       password: hashPass,
-//       lowerCaseUsername,
-//     });
-
-//     // User.find({ lowerCaseUsername });
-
-//     console.log(chalk.green('SUCCESS'));
-//     await passport.authenticate('local', (err, theUser, failureDetails) => {
-//       if (err) {
-//         res
-//           .status(500)
-//           .json({ message: 'Something went wrong authenticating user' });
-//         return;
-//       }
-
-//       if (!theUser) {
-//         res.status(401).json(failureDetails);
-//         return;
-//       }
-
-//       req.login(theUser, (err) => {
-//         if (err) {
-//           res.status(500).json({ message: 'Session save went bad.' });
-//           return;
-//         } else {
-//           res.json({ msg: 'User has been logged in', user: newUser });
-//         }
-//       });
-//     })(req, res, next);
-//   } catch (err) {
-//     console.log(chalk.red('YA DONE MESSED UP, A ARON'));
-//     res.json({ err });
-//   }
-// });
 
 module.exports = router;
