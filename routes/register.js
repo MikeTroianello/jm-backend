@@ -18,15 +18,7 @@ router.get('/', (req, res, next) => {
 
 router.post('/signup', async (req, res) => {
   try {
-    const {
-      username,
-      password,
-      email,
-      phone,
-      special,
-      admin,
-      master,
-    } = req.body;
+    const { username, password, email, phone } = req.body;
 
     if (!username || !password) {
       console.log('IT IS BREAKING DUE TO NO USERNAME AND OR PASSWORD');
@@ -61,10 +53,11 @@ router.post('/signup', async (req, res) => {
       lowerCaseUsername,
       email,
       phone,
-      special,
-      admin,
-      master,
     });
+
+    const { score, challenges } = newUser;
+
+    let user = { username, score, challenges };
 
     console.log(chalk.green('SUCCESS'));
     await req.login(newUser, (err) => {
@@ -73,7 +66,9 @@ router.post('/signup', async (req, res) => {
         res.status(500).json({ message: 'Login after signup went bad.', err });
         return;
       }
-      res.status(200).json(newUser);
+      res
+        .status(200)
+        .json({ msg: 'Succesfully signed up', user, success: true });
     });
   } catch (err) {
     console.log('FAILED', err);
@@ -95,12 +90,18 @@ router.post('/login', (req, res, next) => {
       return;
     }
 
+    console.log(chalk.greenBright('THE USER', theUser));
+
+    const { username, score, challenges } = theUser;
+
+    let user = { username, score, challenges };
+
     req.login(theUser, (err) => {
       if (err) {
         res.status(500).json({ message: 'Session save went bad.' });
         return;
       } else {
-        res.json({ msg: 'User has been logged in' });
+        res.json({ msg: 'User has been logged in', user, success: true });
       }
     });
   })(req, res, next);
@@ -109,7 +110,7 @@ router.post('/login', (req, res, next) => {
 router.post('/logout', async (req, res, next) => {
   await req.logout();
   console.log(chalk.blueBright('Logged out'));
-  res.json({ message: 'Logged out' });
+  res.json({ message: 'Logged out', success: true });
 });
 
 router.get('/test', auth, (req, res) => {

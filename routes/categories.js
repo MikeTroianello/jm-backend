@@ -23,7 +23,7 @@ router.post('/create', auth, async (req, res) => {
       title,
       logo,
     });
-    res.json({ msg: `${newCategory.title} has been created` });
+    res.json({ msg: `${newCategory.title} has been created`, success: true });
   } catch (err) {
     console.log('NOPE', err);
     res.json({ msg: err });

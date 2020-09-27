@@ -55,18 +55,19 @@ router.post('/accept/:id', auth, async (req, res) => {
     console.log('TWO', user);
     user.save();
     const challenge = await Challenge.findById(req.params.id).populate();
-    res.json({ user, challenge });
+    res.json({ challenge, success: true });
   } catch (err) {
     res.json({ err });
   }
 });
 
-router.post('/score', auth, async (req, res) => {
+router.post('/score/:id', auth, async (req, res) => {
   try {
     let user = await User.findById(req.user._id);
     user.score += req.body.score * 50;
+    user.challenges.filter((x) => x._id !== req.params.id);
     user.save();
-    res.json({ user });
+    res.json({ user, success: true });
   } catch (err) {
     console.log(chalk.redBright(err));
     res.json({ err });
