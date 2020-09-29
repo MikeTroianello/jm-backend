@@ -16,8 +16,10 @@ const passport = require('passport');
 
 require('./configs/passport');
 
+const uri = process.env.MONGO_DB || 'mongodb://localhost/dummy';
+
 mongoose
-  .connect(process.env.MONGO_DB, { useNewUrlParser: true })
+  .connect(uri, { useNewUrlParser: true })
   .then((x) => {
     console.log(
       `Connected to Mongo! Database name: "${x.connections[0].name}"`

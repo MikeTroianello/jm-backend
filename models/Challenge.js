@@ -16,15 +16,22 @@ const challengeSchema = new Schema({
   },
   bonusChallenge: {
     type: String,
-    required: true,
+    // required: true,
   },
   minimumChallenge: {
     type: String,
-    required: true,
+    // required: true,
   },
   attempts: {
     type: Number,
     default: 0,
+  },
+  difficulty: {
+    type: Number,
+  },
+  allOrNothing: {
+    type: Boolean,
+    default: false,
   },
   users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   creatorId: { type: Schema.Types.ObjectId, ref: 'User' },
