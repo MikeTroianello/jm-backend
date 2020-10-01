@@ -45,7 +45,11 @@ const userSchema = new Schema({
     type: Number,
     default: 0,
   },
-  currentChallenge: { type: Schema.Types.ObjectId, ref: 'Challenge' },
+  currentChallenge: {
+    type: Schema.Types.ObjectId,
+    ref: 'Challenge',
+    default: null,
+  },
   previousChallenges: [{ type: Schema.Types.ObjectId, ref: 'Challenge' }],
   categories: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
   time: { type: Date, default: Date.now },

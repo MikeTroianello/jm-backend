@@ -8,6 +8,7 @@ const bcryptSalt = 10;
 const auth = require('../configs/authMiddleware.js');
 
 const User = require('../models/User');
+const Challenge = require('../models/Challenge');
 
 const chalk = require('chalk');
 
@@ -76,8 +77,8 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-router.post('/login', (req, res, next) => {
-  passport.authenticate('local', (err, theUser, failureDetails) => {
+router.post('/login', async (req, res, next) => {
+  passport.authenticate('local', async (err, theUser, failureDetails) => {
     if (err) {
       res
         .status(500)
@@ -92,9 +93,18 @@ router.post('/login', (req, res, next) => {
 
     console.log(chalk.greenBright('THE USER', theUser));
 
-    const { username, score, challenges } = theUser;
+    const { username, score, currentChallenge, previousChallenges } = theUser;
 
-    let user = { username, score, challenges };
+    let fullChallenge = await Challenge.findById(currentChallenge).populate();
+
+    let user = {
+      username,
+      score,
+      currentChallenge: fullChallenge,
+      previousChallenges,
+    };
+
+    console.log(chalk.yellowBright(user));
 
     req.login(theUser, (err) => {
       if (err) {

@@ -59,11 +59,11 @@ router.post('/create', auth, async (req, res) => {
 
 router.post('/accept/:id', auth, async (req, res) => {
   try {
-    // console.log('HERE', req.user._id);
+    console.log('HERE', req.params.id);
     const user = await User.findById(req.user._id);
     console.log(chalk.greenBright(user));
     console.log(chalk.blueBright(req.body.challenge));
-    user.challenge = req.params.id;
+    user.currentChallenge = req.params.id;
     user.save();
     const challenge = await Challenge.findById(req.params.id).populate();
     res.json({ challenge, success: true });
